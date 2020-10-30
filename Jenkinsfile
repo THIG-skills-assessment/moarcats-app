@@ -1,3 +1,5 @@
+def dockerImage
+
 pipeline {
     environment {
         registry = 'thigskillsassessment/catgifs'
@@ -21,15 +23,21 @@ pipeline {
 
         stage('Build') {
             steps {
-
+                script {
+                    dockerImage = docker.build("${registry}:${imageTag}")
+                }
             }
         }
 
         stage('Publish') {
             steps {
-                
+                script {
+                    docker.withRegistry( '', registryCredential ) { 
+                        dockerImage.push() 
+
+                    }
+                }
             }
         }
-
     }
 }
